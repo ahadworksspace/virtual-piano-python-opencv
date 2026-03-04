@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piano Player | Piano Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .piano-container {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #8e44ad;
+            margin-bottom: 30px;
+        }
+        
+        .piano-keys {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .key {
+            width: 80px;
+            height: 250px;
+            background: white;
+            border: 1px solid #ccc;
+            margin: 0 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+        
+        .key:hover {
+            background: #f0f0f0;
+        }
+        
+        .key.active {
+            background: #8e44ad;
+            color: white;
+        }
+        
+        .audio-files {
+            margin-top: 40px;
+        }
+        
+        .audio-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f8f8;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .audio-controls button {
+            background: #8e44ad;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .audio-controls button:hover {
+            background: #6c3483;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: #8e44ad;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Piano Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#portfolio">Portfolio</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="piano-container">
+        <h1>Interactive Piano Player</h1>
+        
+        <div class="piano-keys">
+            <div class="key" data-note="C">C</div>
+            <div class="key" data-note="D">D</div>
+            <div class="key" data-note="E">E</div>
+            <div class="key" data-note="F">F</div>
+            <div class="key" data-note="G">G</div>
+        </div>
+        
+        <div class="audio-files">
+            <h2>Audio Collection</h2>
+            <div class="audio-item">
+                <span>C Note (MP3)</span>
+                <div class="audio-controls">
+                    <button onclick="playAudio('C.mp3')">Play</button>
+                </div>
+            </div>
+            <div class="audio-item">
+                <span>G Note (MP3)</span>
+                <div class="audio-controls">
+                    <button onclick="playAudio('G.mp3')">Play</button>
+                </div>
+            </div>
+            <div class="audio-item">
+                <span>Acoustic Guitar</span>
+                <div class="audio-controls">
+                    <button onclick="playAudio('acoustic-guitar-open-e-and-e-strings-32765.mp3')">Play</button>
+                </div>
+            </div>
+            <div class="audio-item">
+                <span>Angel String</span>
+                <div class="audio-controls">
+                    <button onclick="playAudio('angel-string-345127.mp3')">Play</button>
+                </div>
+            </div>
+            <div class="audio-item">
+                <span>F String</span>
+                <div class="audio-controls">
+                    <button onclick="playAudio('f-string-d2-39594.mp3')">Play</button>
+                </div>
+            </div>
+        </div>
+        
+        <audio id="audio-player" style="display: none;"></audio>
+        
+        <a href="index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Piano Portfolio. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Play audio function
+        function playAudio(filename) {
+            const audioPlayer = document.getElementById('audio-player');
+            audioPlayer.src = '../' + filename;
+            audioPlayer.play();
+        }
+        
+        // Piano key interactions
+        document.querySelectorAll('.key').forEach(key => {
+            key.addEventListener('click', function() {
+                const note = this.getAttribute('data-note');
+                this.classList.add('active');
+                
+                // Try to play corresponding WAV file
+                const audioPlayer = document.getElementById('audio-player');
+                audioPlayer.src = '../' + note + '.wav';
+                
+                audioPlayer.play().catch(e => {
+                    console.log("Could not play note:", note);
+                });
+                
+                setTimeout(() => {
+                    this.classList.remove('active');
+                }, 300);
+            });
+        });
+        
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            const keyMap = {
+                'c': 'C',
+                'd': 'D',
+                'e': 'E',
+                'f': 'F',
+                'g': 'G'
+            };
+            
+            const note = keyMap[e.key.toLowerCase()];
+            if (note) {
+                const keyElement = document.querySelector(`.key[data-note="${note}"]`);
+                if (keyElement) {
+                    keyElement.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
